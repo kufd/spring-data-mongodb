@@ -21,6 +21,9 @@ import static org.springframework.data.mongodb.core.messaging.SubscriptionUtils.
 import static org.springframework.data.mongodb.core.query.Criteria.*;
 import static org.springframework.data.mongodb.core.query.Query.*;
 
+import com.mongodb.client.model.ChangeStreamPreAndPostImagesOptions;
+import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.changestream.FullDocumentBeforeChange;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -92,6 +95,12 @@ class ChangeStreamTests {
 	void setUp() {
 
 		template.dropCollection(User.class);
+
+		CreateCollectionOptions cco = new CreateCollectionOptions();
+		cco.changeStreamPreAndPostImagesOptions(new ChangeStreamPreAndPostImagesOptions(true));
+
+		template.getDb().createCollection("user", cco);
+
 
 		container = new DefaultMessageListenerContainer(template, executor);
 		container.start();
@@ -410,6 +419,7 @@ class ChangeStreamTests {
 		ChangeStreamRequest<Document> request = ChangeStreamRequest.builder() //
 				.collection("user") //
 				.fullDocumentLookup(FullDocument.UPDATE_LOOKUP) //
+				.fullDocumentBeforeChangeLookup(FullDocumentBeforeChange.REQUIRED)
 				.maxAwaitTime(Duration.ofMillis(10)) //
 				.publishTo(messageListener).build();
 

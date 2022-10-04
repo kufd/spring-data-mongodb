@@ -4,6 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>spring-data-mongodb</artifactId>
+	<version>3.4.3-UNITY-SNAPSHOT</version>
 
 	<name>Spring Data MongoDB - Core</name>
 	<description>MongoDB support for Spring Data</description>
